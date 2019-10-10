@@ -1,0 +1,47 @@
+---
+title: "data_wrangling II"
+author: "Lulu Zhang"
+date: "10/10/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(rvest)
+library(httr)
+```
+
+
+extracting tables
+read in NSDUH data
+
+```{r}
+url = "http://samhda.s3-us-gov-west-1.amazonaws.com/s3fs-public/field-uploads/2k15StateFiles/NSDUHsaeShortTermCHG2015.htm"
+drug_use_xml = read_html(url)
+
+drug_use_xml
+
+drug_use_xml %>%
+  html_nodes(css = "table") #works usually when you see tables on website
+
+table_marj = 
+  (drug_use_xml %>% html_nodes(css = "table")) %>% 
+  .[[1]] %>% #extract individual items from a list, the . says everything that was the product before the pipe will show up where the . is; it acts as placeholder
+  html_table() 
+
+#can also do 
+table_list = (drug_use_xml %>% html_nodes((css = "table"))
+table_list[[1]]
+              
+              
+table_marj = 
+  (drug_use_xml %>% html_nodes(css = "table")) %>% 
+  .[[1]] %>%
+  html_table() %>%
+  slice(-1) %>% 
+  as_tibble()
+
+table_marj
+```
+
